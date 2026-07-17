@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
   <script>
     (() => {
       const stopZoom = (event) => event.preventDefault();
@@ -90,13 +92,18 @@
       min-height: 46px;
       padding: 8px 10px;
       color: #000066;
-      background: #ffcc00;
+      background:
+        repeating-linear-gradient(0deg, #ffdf24 0 3px, #ffc400 3px 7px),
+        #ffcc00;
       border-top: 4px solid #ffffff;
       border-left: 4px solid #ffffff;
       border-right: 4px solid #663300;
       border-bottom: 4px solid #663300;
       border-radius: 0;
-      box-shadow: 2px 2px 0 var(--shadow);
+      box-shadow:
+        inset 2px 2px 0 rgba(255, 255, 255, 0.62),
+        inset -2px -2px 0 rgba(255, 102, 0, 0.34),
+        3px 3px 0 var(--shadow);
       font-family: "Courier New", Courier, monospace;
       font-size: 14px;
       font-weight: 800;
@@ -113,6 +120,10 @@
       border-right-color: #ffffff;
       border-bottom-color: #ffffff;
       box-shadow: none;
+    }
+
+    button:hover:not(:disabled) {
+      filter: saturate(1.15) brightness(1.06);
     }
 
     input,
@@ -134,7 +145,8 @@
 
     textarea {
       min-height: 128px;
-      resize: vertical;
+      overflow: hidden;
+      resize: none;
       line-height: 1.35;
     }
 
@@ -156,9 +168,13 @@
       display: grid;
       grid-template-rows: auto auto 1fr;
       background:
+        radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.7) 0 2px, transparent 3px),
+        radial-gradient(circle at 76% 68%, rgba(255, 255, 0, 0.75) 0 2px, transparent 3px),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0 7%, transparent 7% 45%, rgba(0, 255, 255, 0.2) 45% 52%, transparent 52%),
         repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.24) 0 2px, transparent 2px 18px),
         repeating-linear-gradient(90deg, rgba(255, 0, 204, 0.18) 0 2px, transparent 2px 18px),
         var(--panel);
+      background-size: 78px 78px, 112px 112px, 145px 145px, auto, auto, auto;
       border: 5px ridge var(--yellow);
       box-shadow:
         0 0 0 4px #000000,
@@ -197,7 +213,9 @@
       height: 12px;
       background:
         repeating-linear-gradient(90deg, #ffffff 0 6px, var(--mint) 6px 12px, var(--pink) 12px 18px, var(--yellow) 18px 24px);
+      background-size: 48px 100%;
       border: 1px solid #000000;
+      animation: webStripe 1.1s linear infinite;
     }
 
     .window-buttons {
@@ -214,6 +232,21 @@
       border-left: 2px solid #ffffff;
       border-right: 2px solid #666666;
       border-bottom: 2px solid #666666;
+      animation: windowPulse 1.2s steps(2, end) infinite;
+    }
+
+    .window-button:nth-child(1) {
+      background: #ff00cc;
+    }
+
+    .window-button:nth-child(2) {
+      background: #ffff00;
+      animation-delay: 0.4s;
+    }
+
+    .window-button:nth-child(3) {
+      background: #00ffff;
+      animation-delay: 0.8s;
     }
 
     .web-strip {
@@ -290,7 +323,16 @@
 
     .title-flash {
       display: inline-block;
-      animation: titleFlash 760ms steps(2, end) infinite;
+      color: transparent !important;
+      background:
+        repeating-linear-gradient(90deg, #ffff00 0 4px, #fff7a6 4px 8px, #00ffff 8px 10px, #ff00cc 10px 12px);
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-size: 48px 100%;
+      -webkit-text-stroke: 1px #ffffff;
+      animation:
+        titleFlash 760ms steps(2, end) infinite,
+        headingTexture 900ms linear infinite;
     }
 
     .workspace {
@@ -311,6 +353,10 @@
       background: #ccffff;
       border: 5px ridge var(--yellow);
       padding: 9px;
+      box-shadow:
+        inset 4px 4px 0 rgba(255, 255, 255, 0.7),
+        inset -5px -5px 0 rgba(0, 102, 204, 0.15),
+        5px 5px 0 rgba(0, 0, 0, 0.24);
     }
 
     .panel-title {
@@ -320,12 +366,14 @@
       background:
         repeating-linear-gradient(90deg, #000080 0 12px, #330066 12px 24px),
         #000080;
+      background-size: 48px 100%;
       border: 3px ridge var(--mint);
       font-family: "Courier New", Courier, monospace;
       font-size: 13px;
       font-weight: 900;
       text-shadow: 1px 1px 0 #000000;
       text-transform: uppercase;
+      animation: webStripe 1.5s linear infinite;
     }
 
     .main-stage {
@@ -342,6 +390,7 @@
       border: 6px ridge var(--mint);
       box-shadow:
         inset 0 0 0 5px rgba(255, 255, 255, 0.45),
+        inset -8px -8px 0 rgba(0, 51, 255, 0.12),
         6px 6px 0 rgba(0, 0, 0, 0.35);
       overflow: hidden;
     }
@@ -349,41 +398,70 @@
     .color-swatch {
       display: grid;
       place-items: center;
+      position: relative;
+      isolation: isolate;
       padding: 12px;
       color: #ffffff;
       background: var(--blue);
       border-right: 5px ridge var(--yellow);
       text-align: center;
       text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7);
+      box-shadow:
+        inset 7px 7px 0 rgba(255, 255, 255, 0.28),
+        inset -9px -9px 0 rgba(0, 0, 0, 0.2);
       transition: background 120ms steps(3, end), color 120ms steps(3, end);
     }
 
     .color-name {
+      position: relative;
+      z-index: 1;
       width: 100%;
       padding: 8px;
       background: rgba(0, 0, 0, 0.2);
       border: 4px ridge rgba(255, 255, 255, 0.82);
       font-family: "Arial Black", Impact, "Comic Sans MS", sans-serif;
-      font-size: clamp(30px, 6vw, 52px);
+      font-size: clamp(26px, 3vw, 40px);
       font-weight: 900;
+      letter-spacing: -0.04em;
       line-height: 1;
-      overflow-wrap: anywhere;
+      overflow: hidden;
+      white-space: nowrap;
       text-transform: uppercase;
+      text-shadow:
+        1px 1px 0 #ffffff,
+        3px 3px 0 #00ffff,
+        5px 5px 0 #6600cc,
+        7px 7px 0 rgba(0, 0, 0, 0.3);
     }
 
     .position-card {
       display: grid;
       align-content: center;
+      position: relative;
+      overflow: hidden;
       gap: 12px;
       padding: 18px;
       background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.75), transparent 35%),
         linear-gradient(90deg, rgba(255, 0, 204, 0.11) 0 2px, transparent 2px 20px),
         linear-gradient(0deg, rgba(0, 51, 255, 0.11) 0 2px, transparent 2px 20px),
         #ffffcc;
       text-align: center;
     }
 
+    .position-card::after {
+      content: "";
+      position: absolute;
+      inset: -35% 0 auto;
+      height: 34%;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.46), transparent);
+      pointer-events: none;
+      animation: panelScan 3.2s linear infinite;
+    }
+
     .position-label {
+      position: relative;
+      z-index: 1;
       color: #0000ee;
       font-family: "Courier New", Courier, monospace;
       font-size: 12px;
@@ -393,6 +471,8 @@
     }
 
     .position-name {
+      position: relative;
+      z-index: 1;
       color: #000033;
       font-family: "Arial Black", Impact, "Comic Sans MS", sans-serif;
       font-size: clamp(48px, 9vw, 96px);
@@ -402,7 +482,8 @@
       text-shadow:
         2px 2px 0 #ffffff,
         4px 4px 0 var(--pink),
-        6px 6px 0 rgba(0, 0, 0, 0.22);
+        6px 6px 0 var(--mint),
+        8px 8px 0 rgba(0, 0, 0, 0.28);
     }
 
     .controls {
@@ -421,15 +502,15 @@
       grid-column: 1 / -1;
       min-height: 92px;
       background:
-        repeating-linear-gradient(135deg, #ff0000 0 22px, #00ff33 22px 44px, #0033ff 44px 66px),
-        #0033ff;
-      border-color: #ffffff #330066 #330066 #ffffff;
+        repeating-linear-gradient(135deg, #ff00cc 0 20px, #00ffff 20px 40px, #ffff00 40px 60px),
+        #00ffff;
+      border-color: #ffffff #6600cc #6600cc #ffffff;
       border-width: 6px;
-      outline: 4px solid #000000;
-      outline-offset: 4px;
+      outline: 3px solid #000000;
+      outline-offset: 3px;
       font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
       font-size: clamp(42px, 10vw, 82px);
-      letter-spacing: 0;
+      letter-spacing: 0.04em;
       text-decoration: none;
       animation: rollFlash 680ms steps(2, end) infinite;
     }
@@ -437,24 +518,30 @@
     .roll-label {
       display: inline-block;
       padding: 0 0.22em 0.08em;
-      color: #ffff00;
-      background: #ffffff;
-      border: 5px solid #000000;
-      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+      color: #ff00cc;
+      background: #ffffcc;
+      border: 5px solid #6600cc;
+      font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
       font-weight: 900;
       box-shadow:
-        6px 6px 0 #0033ff,
-        10px 10px 0 #000000;
+        5px 5px 0 #00ffff,
+        8px 8px 0 #000000;
       line-height: 0.95;
       text-decoration: none;
-      -webkit-text-stroke: 2px #000000;
+      -webkit-text-stroke: 2px #6600cc;
       paint-order: stroke fill;
       text-shadow:
-        3px 3px 0 #001a7a,
+        2px 2px 0 #ffffff,
+        4px 4px 0 #00ffff,
         0 0 8px #ffffff;
       animation:
         rollLabelShake 360ms steps(2, end) infinite,
         rollLabelFlash 680ms steps(2, end) infinite;
+    }
+
+    .roll:disabled {
+      cursor: wait;
+      filter: saturate(1.7) brightness(1.08);
     }
 
     .settings-grid {
@@ -497,6 +584,131 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+
+    .color-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 62px auto;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .color-tools input[type="color"] {
+      min-height: 38px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
+    .color-visibility {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+      gap: 6px;
+      padding: 7px;
+      background: #ffffcc;
+      border: 4px inset #c0c0c0;
+    }
+
+    .color-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      padding: 5px;
+      border: 2px solid #000033;
+      background: #ffffff;
+      color: #000033;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .color-option input {
+      width: 17px;
+      min-height: 17px;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--green);
+    }
+
+    .color-dot {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto;
+      border: 2px solid #000000;
+    }
+
+    .scoreboard {
+      padding: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.8), transparent 28%),
+        repeating-linear-gradient(90deg, rgba(255, 0, 204, 0.1) 0 2px, transparent 2px 16px),
+        #ccffff;
+      background-size: auto, 48px 100%, auto;
+      border: 5px ridge var(--mint);
+      animation: scoreTexture 3.6s linear infinite;
+    }
+
+    .scoreboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+      color: #6600cc;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 14px;
+      font-weight: 900;
+      text-shadow: 1px 1px 0 #ffff00;
+    }
+
+    .add-player {
+      min-height: 31px;
+      padding: 4px 7px;
+      font-size: 12px;
+    }
+
+    .score-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .score-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+      background: #ffffcc;
+      border: 3px ridge #ffffff;
+      box-shadow:
+        inset 2px 2px 0 rgba(255, 255, 255, 0.75),
+        inset -3px -3px 0 rgba(255, 0, 204, 0.12),
+        2px 2px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .score-card input {
+      min-height: 32px;
+      padding: 4px 6px;
+    }
+
+    .score-card button {
+      min-width: 33px;
+      min-height: 32px;
+      padding: 3px 6px;
+      font-size: 18px;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .score-value {
+      min-width: 35px;
+      color: #000033;
+      font-family: "Arial Black", Impact, sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
     }
 
     .status {
@@ -563,11 +775,47 @@
       }
     }
 
+    @keyframes headingTexture {
+      to {
+        background-position: 48px 0;
+      }
+    }
+
+    @keyframes webStripe {
+      to {
+        background-position: 48px 0;
+      }
+    }
+
+    @keyframes windowPulse {
+      0%,
+      100% {
+        filter: brightness(1);
+        transform: translateY(0);
+      }
+      50% {
+        filter: brightness(1.45);
+        transform: translateY(-1px);
+      }
+    }
+
+    @keyframes panelScan {
+      to {
+        transform: translateY(480%);
+      }
+    }
+
+    @keyframes scoreTexture {
+      to {
+        background-position: 0 0, 48px 0, 0 0;
+      }
+    }
+
     @keyframes rollFlash {
       0% {
         background:
-          repeating-linear-gradient(135deg, #ff0000 0 22px, #00ff33 22px 44px, #0033ff 44px 66px),
-          #0033ff;
+          repeating-linear-gradient(135deg, #ff00cc 0 20px, #00ffff 20px 40px, #ffff00 40px 60px),
+          #00ffff;
         box-shadow:
           0 0 0 6px #000000,
           0 0 0 13px #ffff00,
@@ -578,8 +826,8 @@
       }
       100% {
         background:
-          repeating-linear-gradient(45deg, #00ffff 0 22px, #ffff00 22px 44px, #ff00cc 44px 66px),
-          #00ffff;
+          repeating-linear-gradient(45deg, #ffff00 0 20px, #00ffff 20px 40px, #ff00cc 40px 60px),
+          #ff00cc;
         box-shadow:
           0 0 0 6px #000000,
           0 0 0 13px #00ffff,
@@ -607,15 +855,15 @@
 
     @keyframes rollLabelFlash {
       0% {
-        color: #ffff00;
-        background: #ffffff;
+        color: #ff00cc;
+        background: #ffffcc;
         box-shadow:
-          6px 6px 0 #0033ff,
+          6px 6px 0 #00ffff,
           10px 10px 0 #000000;
       }
       100% {
-        color: #ffffff;
-        background: #66ff00;
+        color: #6600cc;
+        background: #ffff00;
         box-shadow:
           6px 6px 0 #ff00cc,
           10px 10px 0 #000000;
@@ -687,15 +935,30 @@
         grid-template-columns: 1fr 1fr;
       }
 
+      .color-tools {
+        grid-template-columns: minmax(0, 1fr) 58px;
+      }
+
+      .color-tools button {
+        grid-column: 1 / -1;
+      }
+
       .roll {
         grid-column: 1 / -1;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .titlebar::before,
+      .title-flash,
+      .panel-title,
+      .window-button,
+      .position-card::after,
+      .scoreboard {
+        animation: none;
+      }
+    }
   </style>
-  <!-- Gymnastics Vault icon -->
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-  <meta name="theme-color" content="#0b4f32">
 </head>
 <body>
   <main class="app">
@@ -737,6 +1000,14 @@
             <button class="roll" id="rollButton" type="button"><span class="roll-label">ROLL</span></button>
             <button id="openSettingsButton" type="button">SETTINGS</button>
             <button id="openListsButton" type="button">CUSTOM LISTS</button>
+          </section>
+
+          <section class="scoreboard" aria-label="Points">
+            <div class="scoreboard-header">
+              <span>POINTS</span>
+              <button class="add-player" id="addPlayerButton" type="button">+ PLAYER</button>
+            </div>
+            <div class="score-list" id="scoreList"></div>
           </section>
         </div>
       </section>
@@ -784,14 +1055,21 @@
           </div>
           <div class="editors">
             <div>
-              <label for="colorInput">Colors</label>
-              <textarea id="colorInput" spellcheck="false"></textarea>
-            </div>
-            <div>
               <label for="positionInput">Positions</label>
               <textarea id="positionInput" spellcheck="false"></textarea>
             </div>
+            <div>
+              <label for="newColorName">Make a color</label>
+              <div class="color-tools" aria-label="Add a new color">
+                <input id="newColorName" type="text" autocomplete="off" placeholder="New color name">
+                <input id="newColorHex" type="color" value="#1764d8" aria-label="New color shade">
+                <button id="addColorButton" type="button">ADD COLOR</button>
+              </div>
+              <label>Show colors</label>
+              <div class="color-visibility" id="colorVisibility" aria-label="Show or hide colors"></div>
+            </div>
           </div>
+          <textarea id="colorInput" hidden aria-hidden="true"></textarea>
           <div class="controls list-actions">
             <button id="saveListsButton" type="button">SAVE AS LIST</button>
             <button id="loadListButton" type="button">LOAD</button>
@@ -852,19 +1130,34 @@
     const difficulty = document.getElementById("difficulty");
     const avoidRepeats = document.getElementById("avoidRepeats");
     const colorInput = document.getElementById("colorInput");
+    const newColorName = document.getElementById("newColorName");
+    const newColorHex = document.getElementById("newColorHex");
+    const colorVisibility = document.getElementById("colorVisibility");
     const positionInput = document.getElementById("positionInput");
     const listNameInput = document.getElementById("listNameInput");
     const savedListSelect = document.getElementById("savedListSelect");
     const status = document.getElementById("status");
     const soundButton = document.getElementById("soundButton");
+    const rollButton = document.getElementById("rollButton");
+    const rollLabel = rollButton.querySelector(".roll-label");
+    const scoreList = document.getElementById("scoreList");
     const namedListsStorageKey = "colorPositionNamedLists";
     const soundStorageKey = "colorPositionSound";
+    const hiddenColorsStorageKey = "colorPositionHiddenColors";
+    const scoresStorageKey = "colorPositionScores";
     const soundEffects = {
       click: [{ frequency: 520, duration: 0.045, type: "square", gain: 0.024 }],
       roll: [
         { frequency: 330, duration: 0.05, type: "square", gain: 0.03 },
         { frequency: 495, delay: 0.045, duration: 0.055, type: "square", gain: 0.032 },
         { frequency: 740, delay: 0.095, duration: 0.09, type: "triangle", gain: 0.032 }
+      ],
+      tick: [{ frequency: 460, duration: 0.035, type: "square", gain: 0.018 }],
+      done: [
+        { frequency: 523, duration: 0.08, type: "triangle", gain: 0.035 },
+        { frequency: 659, delay: 0.07, duration: 0.1, type: "triangle", gain: 0.04 },
+        { frequency: 784, delay: 0.15, duration: 0.16, type: "sine", gain: 0.045 },
+        { frequency: 1047, delay: 0.15, duration: 0.22, type: "sine", gain: 0.025 }
       ],
       open: [
         { frequency: 392, duration: 0.045, type: "triangle", gain: 0.026 },
@@ -910,6 +1203,9 @@
 
     let colors = [...defaultColors];
     let positions = [...defaultPositions];
+    let hiddenColorNames = new Set();
+    let players = loadPlayers();
+    let isRolling = false;
     let currentColor = colors[4];
     let currentPosition = positions[0];
     let soundEnabled = loadSoundPreference();
@@ -940,13 +1236,27 @@
       return positions.filter((position) => position.tags.includes(mode));
     }
 
+    function visibleColors() {
+      return colors.filter((color) => !hiddenColorNames.has(color.name.toLowerCase()));
+    }
+
     function renderPrompt() {
       colorName.textContent = currentColor.name.toUpperCase();
       colorSwatch.style.background = currentColor.hex;
       colorSwatch.style.color = currentColor.text;
+      fitColorName();
       positionName.textContent = currentPosition.name;
       prompt.classList.remove("flash");
       window.requestAnimationFrame(() => prompt.classList.add("flash"));
+    }
+
+    function fitColorName() {
+      colorName.style.fontSize = "";
+      let fontSize = parseFloat(window.getComputedStyle(colorName).fontSize);
+      while (colorName.scrollWidth > colorName.clientWidth && fontSize > 16) {
+        fontSize -= 1;
+        colorName.style.fontSize = `${fontSize}px`;
+      }
     }
 
     function rollPosition() {
@@ -958,11 +1268,43 @@
     }
 
     function rollAll() {
-      currentColor = randomItem(colors, currentColor) || currentColor;
-      currentPosition = randomItem(filteredPositions(), currentPosition) || currentPosition;
-      renderPrompt();
-      setStatus("New prompt ready.");
-      playSound("roll");
+      if (isRolling) {
+        return;
+      }
+
+      const colorPool = visibleColors();
+      const positionPool = filteredPositions();
+      const finalColor = randomItem(colorPool, currentColor) || currentColor;
+      const finalPosition = randomItem(positionPool, currentPosition) || currentPosition;
+      const totalSteps = 12;
+      let step = 0;
+      isRolling = true;
+      rollButton.disabled = true;
+      rollLabel.textContent = "ROLLING";
+      setStatus("Rolling...");
+
+      function spin() {
+        const isFinalStep = step === totalSteps - 1;
+        currentColor = isFinalStep ? finalColor : randomItem(colorPool, currentColor) || currentColor;
+        currentPosition = isFinalStep ? finalPosition : randomItem(positionPool, currentPosition) || currentPosition;
+        renderPrompt();
+
+        if (isFinalStep) {
+          isRolling = false;
+          rollButton.disabled = false;
+          rollLabel.textContent = "ROLL";
+          setStatus("New prompt ready!");
+          playSound("done");
+          return;
+        }
+
+        playSound("tick");
+        step += 1;
+        const delay = 45 + (step * step * 2);
+        window.setTimeout(spin, delay);
+      }
+
+      spin();
     }
 
     function setStatus(message) {
@@ -973,6 +1315,9 @@
       [gameScreen, settingsScreen, listsScreen].forEach((item) => {
         item.classList.toggle("active", item === screen);
       });
+      if (screen === listsScreen) {
+        window.requestAnimationFrame(resizePositionInput);
+      }
     }
 
     function parseColors(text) {
@@ -986,11 +1331,82 @@
           const hex = /^#[0-9a-f]{6}$/i.test(hexPart) ? hexPart : fallback.hex;
           const textColor = ["#ffe45c", "#fffdf2", "#ff8a34", "#ff4aa6", "#18c9be"].includes(hex.toLowerCase()) ? "#101116" : "#ffffff";
           return {
-            name: namePart,
+            name: namePart || fallback.name,
             hex,
             text: textColor
           };
         });
+    }
+
+    function colorLines() {
+      return colors.map((color) => `${color.name}: ${color.hex}`).join("\n");
+    }
+
+    function persistHiddenColors() {
+      localStorage.setItem(hiddenColorsStorageKey, JSON.stringify([...hiddenColorNames]));
+    }
+
+    function renderColorVisibility() {
+      colorVisibility.innerHTML = "";
+      const currentNames = new Set(colors.map((color) => color.name.toLowerCase()));
+      hiddenColorNames = new Set([...hiddenColorNames].filter((name) => currentNames.has(name)));
+
+      colors.forEach((color) => {
+        const key = color.name.toLowerCase();
+        const option = document.createElement("label");
+        option.className = "color-option";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = !hiddenColorNames.has(key);
+        checkbox.setAttribute("aria-label", `Show ${color.name}`);
+        checkbox.addEventListener("change", () => {
+          if (!checkbox.checked && visibleColors().length === 1) {
+            checkbox.checked = true;
+            setStatus("Keep at least one color visible.");
+            playSound("error");
+            return;
+          }
+          if (checkbox.checked) {
+            hiddenColorNames.delete(key);
+          } else {
+            hiddenColorNames.add(key);
+          }
+          persistHiddenColors();
+          setStatus(`${color.name} ${checkbox.checked ? "shown" : "hidden"}.`);
+          playSound("click");
+        });
+        const dot = document.createElement("span");
+        dot.className = "color-dot";
+        dot.style.background = color.hex;
+        const name = document.createElement("span");
+        name.textContent = color.name;
+        option.append(checkbox, dot, name);
+        colorVisibility.appendChild(option);
+      });
+    }
+
+    function addColor() {
+      const name = newColorName.value.trim();
+      const hex = newColorHex.value;
+      if (!name) {
+        setStatus("Name the new color first.");
+        playSound("error");
+        newColorName.focus();
+        return;
+      }
+      if (colors.some((color) => color.name.toLowerCase() === name.toLowerCase())) {
+        setStatus("That color name is already in the list.");
+        playSound("error");
+        return;
+      }
+      const text = ["#ffe45c", "#fffdf2", "#ff8a34", "#ff4aa6", "#18c9be"].includes(hex.toLowerCase()) ? "#101116" : "#ffffff";
+      colors.push({ name, hex, text });
+      colorInput.value = colorLines();
+      localStorage.setItem("colorPositionColors", colorInput.value);
+      renderColorVisibility();
+      newColorName.value = "";
+      setStatus(`Added ${name}.`);
+      playSound("save");
     }
 
     function parsePositions(text) {
@@ -1002,6 +1418,12 @@
           name: line,
           tags: ["basic", "strength", "balance"]
         }));
+    }
+
+    function resizePositionInput() {
+      positionInput.style.height = "auto";
+      const borderHeight = positionInput.offsetHeight - positionInput.clientHeight;
+      positionInput.style.height = `${positionInput.scrollHeight + borderHeight}px`;
     }
 
     function saveLists(message = "Custom lists saved.") {
@@ -1016,10 +1438,14 @@
 
       colors = parsedColors;
       positions = parsedPositions;
+      resizePositionInput();
+      hiddenColorNames = new Set([...hiddenColorNames].filter((name) => colors.some((color) => color.name.toLowerCase() === name)));
       currentColor = colors[0];
       currentPosition = positions[0];
       localStorage.setItem("colorPositionColors", colorInput.value);
       localStorage.setItem("colorPositionPositions", positionInput.value);
+      persistHiddenColors();
+      renderColorVisibility();
       renderPrompt();
       setStatus(message);
       playSound("save");
@@ -1072,7 +1498,8 @@
       const namedLists = readNamedLists();
       namedLists[name] = {
         colors: colorInput.value,
-        positions: positionInput.value
+        positions: positionInput.value,
+        hiddenColors: [...hiddenColorNames]
       };
       writeNamedLists(namedLists);
       renderSavedListSelect(name);
@@ -1092,6 +1519,7 @@
       listNameInput.value = name;
       colorInput.value = list.colors;
       positionInput.value = list.positions;
+      hiddenColorNames = new Set(list.hiddenColors || []);
       saveLists(`Loaded list: ${name}.`);
       renderSavedListSelect(name);
       playSound("load");
@@ -1125,9 +1553,16 @@
         colors = parseColors(savedColors);
       }
 
+      try {
+        hiddenColorNames = new Set(JSON.parse(localStorage.getItem(hiddenColorsStorageKey)) || []);
+      } catch (error) {
+        hiddenColorNames = new Set();
+      }
+
       if (savedPositions) {
         positions = parsePositions(savedPositions);
       }
+      resizePositionInput();
     }
 
     function resetDefaults() {
@@ -1135,11 +1570,15 @@
       positions = [...defaultPositions];
       colorInput.value = defaultColors.map((color) => `${color.name}: ${color.hex}`).join("\n");
       positionInput.value = defaultPositions.map((position) => position.name).join("\n");
+      resizePositionInput();
       localStorage.removeItem("colorPositionColors");
       localStorage.removeItem("colorPositionPositions");
+      localStorage.removeItem(hiddenColorsStorageKey);
       currentColor = colors[4];
       currentPosition = positions[0];
+      hiddenColorNames = new Set();
       renderPrompt();
+      renderColorVisibility();
       setStatus("Default lists restored.");
       playSound("reset");
     }
@@ -1163,6 +1602,72 @@
     function syncSoundButton() {
       soundButton.textContent = soundEnabled ? "SOUND: ON" : "SOUND: OFF";
       soundButton.setAttribute("aria-pressed", String(soundEnabled));
+    }
+
+    function loadPlayers() {
+      try {
+        const savedPlayers = JSON.parse(localStorage.getItem(scoresStorageKey));
+        if (Array.isArray(savedPlayers) && savedPlayers.length) {
+          return savedPlayers.map((player, index) => ({
+            name: String(player.name || `Player ${index + 1}`),
+            points: Number.isFinite(Number(player.points)) ? Number(player.points) : 0
+          }));
+        }
+      } catch (error) {
+        // Use the starter player when saved score data cannot be read.
+      }
+      return [{ name: "Player 1", points: 0 }];
+    }
+
+    function savePlayers() {
+      localStorage.setItem(scoresStorageKey, JSON.stringify(players));
+    }
+
+    function renderScores() {
+      scoreList.innerHTML = "";
+      players.forEach((player, index) => {
+        const card = document.createElement("div");
+        card.className = "score-card";
+        const name = document.createElement("input");
+        name.type = "text";
+        name.value = player.name;
+        name.setAttribute("aria-label", `Player ${index + 1} name`);
+        name.addEventListener("change", () => {
+          players[index].name = name.value.trim() || `Player ${index + 1}`;
+          name.value = players[index].name;
+          savePlayers();
+        });
+        const minus = document.createElement("button");
+        minus.type = "button";
+        minus.textContent = "−";
+        minus.setAttribute("aria-label", `Remove a point from ${player.name}`);
+        minus.addEventListener("click", () => changeScore(index, -1));
+        const value = document.createElement("span");
+        value.className = "score-value";
+        value.textContent = player.points;
+        const plus = document.createElement("button");
+        plus.type = "button";
+        plus.textContent = "+";
+        plus.setAttribute("aria-label", `Add a point to ${player.name}`);
+        plus.addEventListener("click", () => changeScore(index, 1));
+        card.append(name, minus, value, plus);
+        scoreList.appendChild(card);
+      });
+    }
+
+    function changeScore(index, amount) {
+      players[index].points += amount;
+      savePlayers();
+      renderScores();
+      playSound("click");
+    }
+
+    function addPlayer() {
+      players.push({ name: `Player ${players.length + 1}`, points: 0 });
+      savePlayers();
+      renderScores();
+      setStatus("Player added.");
+      playSound("save");
     }
 
     function toggleSound() {
@@ -1284,7 +1789,7 @@
       oscillator.stop(startAt + duration + 0.03);
     }
 
-    document.getElementById("rollButton").addEventListener("click", rollAll);
+    rollButton.addEventListener("click", rollAll);
     document.getElementById("openSettingsButton").addEventListener("click", () => {
       showScreen(settingsScreen);
       setStatus("Settings open.");
@@ -1307,19 +1812,26 @@
     document.getElementById("loadListButton").addEventListener("click", loadNamedList);
     document.getElementById("deleteListButton").addEventListener("click", deleteNamedList);
     document.getElementById("defaultsButton").addEventListener("click", resetDefaults);
+    document.getElementById("addColorButton").addEventListener("click", addColor);
+    document.getElementById("addPlayerButton").addEventListener("click", addPlayer);
     soundButton.addEventListener("click", toggleSound);
     savedListSelect.addEventListener("change", () => {
       listNameInput.value = savedListSelect.value;
       playSound("click");
     });
+    positionInput.addEventListener("input", () => window.requestAnimationFrame(resizePositionInput));
     difficulty.addEventListener("change", rollPosition);
     document.addEventListener("pointerdown", unlockAudio, { capture: true, passive: true });
     document.addEventListener("touchstart", unlockAudio, { capture: true, passive: true });
     document.addEventListener("click", playButtonFallbackSound);
+    window.addEventListener("resize", fitColorName);
+    window.addEventListener("resize", resizePositionInput);
 
     loadLists();
+    renderColorVisibility();
     renderSavedListSelect();
     renderPrompt();
+    renderScores();
     syncSoundButton();
   </script>
 </body>
