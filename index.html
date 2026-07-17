@@ -1609,7 +1609,7 @@
         const savedPlayers = JSON.parse(localStorage.getItem(scoresStorageKey));
         if (Array.isArray(savedPlayers) && savedPlayers.length) {
           return savedPlayers.map((player, index) => ({
-            name: String(player.name || `Player ${index + 1}`),
+            name: typeof player.name === "string" ? player.name : `Player ${index + 1}`,
             points: Number.isFinite(Number(player.points)) ? Number(player.points) : 0
           }));
         }
@@ -1623,7 +1623,7 @@
       localStorage.setItem(scoresStorageKey, JSON.stringify(players));
     }
 
-    function renderScores() {
+    function renderScores(focusPlayerIndex = null) {
       scoreList.innerHTML = "";
       players.forEach((player, index) => {
         const card = document.createElement("div");
@@ -1631,16 +1631,19 @@
         const name = document.createElement("input");
         name.type = "text";
         name.value = player.name;
+        name.placeholder = `Player ${index + 1}`;
+        name.autocomplete = "off";
         name.setAttribute("aria-label", `Player ${index + 1} name`);
         name.addEventListener("change", () => {
-          players[index].name = name.value.trim() || `Player ${index + 1}`;
+          players[index].name = name.value.trim();
           name.value = players[index].name;
           savePlayers();
         });
+        const playerLabel = player.name.trim() || `Player ${index + 1}`;
         const minus = document.createElement("button");
         minus.type = "button";
         minus.textContent = "−";
-        minus.setAttribute("aria-label", `Remove a point from ${player.name}`);
+        minus.setAttribute("aria-label", `Remove a point from ${playerLabel}`);
         minus.addEventListener("click", () => changeScore(index, -1));
         const value = document.createElement("span");
         value.className = "score-value";
@@ -1648,10 +1651,11 @@
         const plus = document.createElement("button");
         plus.type = "button";
         plus.textContent = "+";
-        plus.setAttribute("aria-label", `Add a point to ${player.name}`);
+        plus.setAttribute("aria-label", `Add a point to ${playerLabel}`);
         plus.addEventListener("click", () => changeScore(index, 1));
         card.append(name, minus, value, plus);
         scoreList.appendChild(card);
+        if (index === focusPlayerIndex) name.focus();
       });
     }
 
@@ -1663,10 +1667,11 @@
     }
 
     function addPlayer() {
-      players.push({ name: `Player ${players.length + 1}`, points: 0 });
+      const newPlayerIndex = players.length;
+      players.push({ name: "", points: 0 });
       savePlayers();
-      renderScores();
-      setStatus("Player added.");
+      renderScores(newPlayerIndex);
+      setStatus("Player added. Type a name.");
       playSound("save");
     }
 
