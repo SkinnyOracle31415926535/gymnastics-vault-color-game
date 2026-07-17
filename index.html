@@ -1634,6 +1634,10 @@
         name.placeholder = `Player ${index + 1}`;
         name.autocomplete = "off";
         name.setAttribute("aria-label", `Player ${index + 1} name`);
+        name.addEventListener("input", () => {
+          players[index].name = name.value;
+          savePlayers();
+        });
         name.addEventListener("change", () => {
           players[index].name = name.value.trim();
           name.value = players[index].name;
